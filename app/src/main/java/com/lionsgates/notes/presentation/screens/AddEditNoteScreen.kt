@@ -21,24 +21,21 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
@@ -47,7 +44,6 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -106,49 +102,38 @@ fun AddEditNoteScreen(
             SnackbarHost(hostState = snackBarHostState)
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    viewModel.onEvent(AddEditNoteEvents.SaveNote)
-                },
-                containerColor = MaterialTheme.colorScheme.primary
+            Row(
+                verticalAlignment = Alignment.Bottom,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(15.dp)
+                    .padding(start = 10.dp)
+                    .padding(horizontal = 30.dp)
             ) {
-                Icon(
-                    imageVector = Icons.Default.Save,
-                    contentDescription = "Save note"
-                )
-            }
-        },
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = "Note",
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = fontFamily,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(end = 28.dp)
+                FloatingActionButton(
+                    onClick = {
+                        navController.navigateUp()
+                    },
+                    containerColor = MaterialTheme.colorScheme.primary
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Home,
+                        contentDescription = "Home"
                     )
-                },
-                navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            navController.navigateUp()
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                            contentDescription = "Go back",
-                            tint = Color.DarkGray
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent
-                )
-            )
+                }
+                FloatingActionButton(
+                    onClick = {
+                        viewModel.onEvent(AddEditNoteEvents.SaveNote)
+                    },
+                    containerColor = MaterialTheme.colorScheme.primary
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Save,
+                        contentDescription = "Save note"
+                    )
+                }
+            }
         },
         containerColor = Color.Transparent
     ) { paddingValues ->
@@ -169,7 +154,7 @@ fun AddEditNoteScreen(
                     val colorInt = color.toArgb()
                     Box(
                         modifier = Modifier
-                            .size(30.dp)
+                            .size(40.dp)
                             .shadow(elevation = 15.dp, shape = CircleShape)
                             .clip(CircleShape)
                             .background(color)
@@ -188,16 +173,16 @@ fun AddEditNoteScreen(
                                 viewModel.onEvent(AddEditNoteEvents.ChangeColor(colorInt))
                             }
                     )
-                    Spacer(modifier = Modifier.width(14.dp))
+                    Spacer(modifier = Modifier.width(15.dp))
                 }
             }
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(35.dp))
             TransparentHintTextFields(
                 text = noteTitle.text,
                 hint = noteTitle.hint,
                 isHintVisible = noteTitle.isHintVisible,
                 singleLine = true,
-                textStyle = MaterialTheme.typography.headlineSmall,
+                textStyle = MaterialTheme.typography.headlineMedium,
                 fontFamily = fontFamily,
                 onValueChange = {
                     viewModel.onEvent(AddEditNoteEvents.EnteredTitle(it))
@@ -207,7 +192,7 @@ fun AddEditNoteScreen(
                 },
                 textTags = TestTag.TITLE_TEXT_FIELD
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(14.dp))
             TransparentHintTextFields(
                 text = noteContent.text,
                 hint = noteContent.hint,
